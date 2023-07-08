@@ -1,15 +1,20 @@
 import mongoose from 'mongoose';
-import { config } from './config';
+import { config } from '@config/config';
 import Logger from 'bunyan';
+import { redisConnection } from '@services/redis/redis-connection';
 
-const log: Logger = config.createLogger('database');
+const log: Logger = config.createLogger('DATABASE-LOG');
 
+// export as a default annonymous function
+// with this, you can assign any identifier during import
 export default () => {
-  const connect = () => {
+  const connect = (): void => {
     mongoose
       .connect(`${config.databaseUrl}`)
       .then(() => {
         log.info('database connection established');
+        // connect redis
+        redisConnection.connect();
       })
       .catch((error) => {
         log.error('error connecting to database', error);
