@@ -11,21 +11,23 @@ import cookieSession from 'cookie-session';
 import HTTP_STATUS from 'http-status-codes';
 import compression from 'compression';
 import 'express-async-errors';
-import { config } from './config';
-import appRoutes from '../routes/routes';
-import { CustomError, IErrorResponse } from 'src/shared/globals/helpers/error-handler';
 import Logger from 'bunyan';
+import { config } from '@config/config';
+import appRoutes from '@routes/routes';
+import { CustomError, IErrorResponse } from '@globals/helpers/error-handler';
 
 const SERVER_PORT = 5000;
-const log: Logger = config.createLogger('server');
+const log: Logger = config.createLogger('SERVER-LOG');
 
 export class BuddiesServer {
+  // this comes from express
   private app: Application;
 
   constructor(app: Application) {
     this.app = app;
   }
 
+  // starts the server
   public start(): void {
     this.securityMiddleware(this.app);
     this.standardMiddleware(this.app);
@@ -35,16 +37,21 @@ export class BuddiesServer {
   }
 
   private securityMiddleware(app: Application): void {
+    // to store user session information
     app.use(
       cookieSession({
         name: 'session',
         keys: [config.secretKeyOne!, config.secretKeyTwo!],
         maxAge: 3600000 * 24 * 7,
         secure: config.nodeEnv != 'local'
+        // sameSite: 'none' // comment this line when running the server locally
       })
     );
+    // protects against HTTP Parameter Pollution attacks
     app.use(hpp());
+    // set HTTP response headers.
     app.use(helmet());
+    // enable cross-origin resource sharing
     app.use(
       cors({
         origin: config.clientUrl,
@@ -54,6 +61,7 @@ export class BuddiesServer {
       })
     );
   }
+
   private standardMiddleware(app: Application): void {
     app.use(compression());
     app.use(json({ limit: '50mb' }));
@@ -64,9 +72,11 @@ export class BuddiesServer {
       })
     );
   }
+
   private routesMiddleware(app: Application): void {
     appRoutes(app);
   }
+
   private globalErrHandler(app: Application): void {
     app.all('*', (req: Request, res: Response) => {
       res.status(HTTP_STATUS.NOT_FOUND).json({ message: `${req.originalUrl} not found` });
@@ -114,5 +124,8 @@ export class BuddiesServer {
     });
   }
 
-  private socketIOConnections(io: Server): void {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private socketIOConnections(io: Server): void {
+    log.info('Connecting to socket');
+  }
 }

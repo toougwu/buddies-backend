@@ -1,16 +1,16 @@
 import HTTP_STATUS from 'http-status-codes';
 
 export interface IErrorResponse {
-  message: string;
   statusCode: number;
   status: string;
+  message: string;
   serializeErrors(): IError;
 }
 
 export interface IError {
-  message: string;
   statusCode: number;
   status: string;
+  message: string;
 }
 
 export abstract class CustomError extends Error {
@@ -23,9 +23,9 @@ export abstract class CustomError extends Error {
 
   serializeErrors(): IError {
     return {
-      message: this.message,
+      statusCode: this.statusCode,
       status: this.status,
-      statusCode: this.statusCode
+      message: this.message
     };
   }
 }
@@ -75,7 +75,7 @@ export class ServerError extends CustomError {
   }
 }
 
-export class RequestValidationError extends CustomError {
+export class JoiRequestValidationError extends CustomError {
   statusCode = HTTP_STATUS.BAD_REQUEST;
   status = 'error';
 
