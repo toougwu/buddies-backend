@@ -10,7 +10,7 @@ import { BadRequestError } from '@globals/helpers/error-handler';
 import { userService } from '@services/database/user-service';
 import { IUserDoc } from '@user/interfaces/user-interface';
 
-export class Login {
+export class LoginController {
   @validate(loginValidatorSchema)
   public async loginAccount(req: Request, res: Response): Promise<void> {
     const { username, password } = req.body;
