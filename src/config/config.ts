@@ -6,6 +6,7 @@ import cloudinary from 'cloudinary';
 dotenv.config({});
 
 class Config {
+  public appName: string | undefined;
   public databaseUrl: string | undefined;
   public jwtToken: string | undefined;
   public nodeEnv: string | undefined;
@@ -16,10 +17,15 @@ class Config {
   public cloudName: string | undefined;
   public cloudApiKey: string | undefined;
   public cloudApiSecret: string | undefined;
+  public senderEmail: string | undefined;
+  public senderEmailPassword: string | undefined;
+  public sendgridApiKey: string | undefined;
+  public sendgridSender: string | undefined;
 
   private readonly defaultDatabaseUrl = 'mongodb://127.0.0.1:27017/buddies-db';
 
   constructor() {
+    this.appName = process.env.APP_NAME || 'NodeJS App';
     this.databaseUrl = process.env.DATABASE_URL || this.defaultDatabaseUrl;
     this.jwtToken = process.env.JWT_TOKEN || '12345';
     this.nodeEnv = process.env.NODE_ENV || '';
@@ -30,6 +36,10 @@ class Config {
     this.cloudName = process.env.CLOUD_NAME || '';
     this.cloudApiKey = process.env.CLOUD_API_KEY || '';
     this.cloudApiSecret = process.env.CLOUD_API_SECRET || '';
+    this.senderEmail = process.env.SENDER_EMAIL || '';
+    this.senderEmailPassword = process.env.SENDER_EMAIL_PASSWORD || '';
+    this.sendgridApiKey = process.env.SENDGRID_API_KEY || '';
+    this.sendgridSender = process.env.SENDGRID_SENDER || '';
   }
 
   public createLogger(name: string): bunyan {

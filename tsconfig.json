@@ -31,7 +31,8 @@
       "@auth/*": ["src/features/auth/*"],
       "@user/*": ["src/features/user/*"],
       "@config/*": ["src/config/*"],
-      "@routes/*": ["src/routes/*"]
+      "@routes/*": ["src/routes/*"],
+      "@root/*": ["src/*"]
     }
   }
 }

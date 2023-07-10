@@ -23,8 +23,6 @@ export interface IUserDoc extends Document {
   bgImageVersion: string;
   bgImageId: string;
   profilePicture: string;
-  passwordResetToke?: string;
-  passwordResetExpires?: number | string;
   createdAt?: Date;
 }
 

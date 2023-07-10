@@ -13,13 +13,13 @@ import { IUserDoc } from '@user/interfaces/user-interface';
 import { UserCache } from '@services/redis/user-cache';
 import { config } from '@config/config';
 import { omit } from 'lodash';
-import { authQueue } from '@services/queues/auth-gueue';
+import { authQueue } from '@services/queues/auth-queue';
 import { userQueue } from '@services/queues/user-queue';
 import JWT from 'jsonwebtoken';
 
 const userCache: UserCache = new UserCache();
 
-export class Register {
+export class RegisterController {
   @validate(registerValidatorSchema)
   public async createAccount(req: Request, res: Response): Promise<void> {
     const { username, email, password, avatarColor, avatarImage } = req.body;
@@ -36,7 +36,7 @@ export class Register {
     // the reason we are using Register.prototype.registrationData and not this.registrationData is because
     // of how we invoke the createAccount method in the routes method.
     // the scope of the this object is not kept when the method is invoked
-    const authData: IAuthDoc = Register.prototype.registrationData({
+    const authData: IAuthDoc = RegisterController.prototype.registrationData({
       _id: authObjectId,
       uId: uId,
       username: username,
@@ -57,7 +57,7 @@ export class Register {
     }
 
     // Add to redis cache
-    const userDataForCache: IUserDoc = Register.prototype.userData(authData, userObjectId);
+    const userDataForCache: IUserDoc = RegisterController.prototype.userData(authData, userObjectId);
     userDataForCache.profilePicture = `https://res.cloudinary.com/${config.cloudName}/image/upload/v${result.version}/${userObjectId}`;
     await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
 
@@ -66,7 +66,7 @@ export class Register {
     authQueue.addAuthUserJob('addAuthUserToDB', { value: authData });
     userQueue.addUserJob('addUserToDB', { value: userDataForCache });
 
-    const userJwt: string = Register.prototype.createToken(authData, userObjectId);
+    const userJwt: string = RegisterController.prototype.createToken(authData, userObjectId);
     req.session = { jwt: userJwt };
     res
       .status(HTTP_STATUS.CREATED)

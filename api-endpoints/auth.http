@@ -23,7 +23,7 @@ withCredentials: true
 
 {
   "username": "johndoe",
-  "password": "123456"
+  "password": "654321"
 }
 
 ###
@@ -39,9 +39,6 @@ Accept: application/json
 withCredentials: true
 
 
-
-
-
 ###
 POST {{baseUrl}}/{{urlPath}}/forgot-password
 Content-Type: application/json
@@ -49,16 +46,16 @@ Accept: application/json
 withCredentials: true
 
 {
-  "email": ""
+  "email": "johndoe@gmail.com"
 }
 
 ###
-POST {{baseUrl}}/{{urlPath}}/reset-password/<token>
+POST {{baseUrl}}/{{urlPath}}/reset-password/a05cbac5a597b776db5dce3f06f3b679e7a7ae89
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 {
-  "password": "",
-  "confirmPassword": ""
+  "password": "654321",
+  "confirmPassword": "654321"
 }

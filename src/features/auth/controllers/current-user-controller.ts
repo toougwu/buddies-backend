@@ -6,7 +6,7 @@ import { userService } from '@services/database/user-service';
 
 const userCache: UserCache = new UserCache();
 
-export class CurrentUser {
+export class CurrentUserController {
   public async getUser(req: Request, res: Response): Promise<void> {
     let isUser = false;
     let token = null;
